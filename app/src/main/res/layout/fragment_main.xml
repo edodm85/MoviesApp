@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,9 +9,16 @@
     tools:context="com.example.edoardo.moviesapp.MainActivityFragment"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/gridView_movies"
+        android:numColumns="auto_fit"
+        android:stretchMode="none"
+        android:gravity="fill"
+        android:minHeight="1dp"
+        android:minWidth="1dp"
+        android:columnWidth="90dp"
+        android:verticalSpacing="1dp" />
 
-</RelativeLayout>
+</FrameLayout>
