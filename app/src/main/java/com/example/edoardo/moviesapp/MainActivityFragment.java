@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -16,16 +19,25 @@ import android.widget.ImageView;
 public class MainActivityFragment extends Fragment {
 
 
+    public static String[] eatFoodyImages = {
+            "http://i.imgur.com/rFLNqWI.jpg",
+            "http://i.imgur.com/C9pBVt7.jpg",
+            "http://i.imgur.com/rT5vXE1.jpg",
+            "http://i.imgur.com/aIy5R2k.jpg",
+            "http://i.imgur.com/MoJs9pT.jpg",
+            "http://i.imgur.com/S963yEM.jpg",
+            "http://i.imgur.com/rLR2cyc.jpg",
+            "http://i.imgur.com/SEPdUIx.jpg",
+            "http://i.imgur.com/aC9OjaM.jpg",
+            "http://i.imgur.com/76Jfv9b.jpg",
+            "http://i.imgur.com/fUX7EIB.jpg",
+            "http://i.imgur.com/syELajx.jpg",
+            "http://i.imgur.com/COzBnru.jpg",
+            "http://i.imgur.com/Z3QjilA.jpg",
+    };
+
     // references to our images
     private Integer[] mThumbIds = {
-            R.drawable.sample_0,
-            R.drawable.sample_1,
-            R.drawable.sample_2,
-            R.drawable.sample_3,
-            R.drawable.sample_4,
-            R.drawable.sample_5,
-            R.drawable.sample_6,
-            R.drawable.sample_7,
             R.drawable.sample_0,
             R.drawable.sample_1,
             R.drawable.sample_2,
@@ -59,9 +71,12 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridview = (GridView) rootView.findViewById(R.id.gridView_movies);
 
+        // for picasso
+        gridview.setAdapter(new ImageGridArrayAdapter(getContext(), eatFoodyImages));
 
-        ImageGridAdapter oTest = new ImageGridAdapter(getContext());
-        gridview.setAdapter(oTest);
+
+        //ImageGridAdapter oTest = new ImageGridAdapter(getContext());
+        //gridview.setAdapter(oTest);
 
         return rootView;
     }
@@ -116,10 +131,41 @@ public class MainActivityFragment extends Fragment {
             imageView.setImageResource(mThumbIds[position]);
             return imageView;
         }
-
-
     }
 
+
+
+    // Adapter for picasso
+    public class ImageGridArrayAdapter extends ArrayAdapter {
+        private Context context;
+        private LayoutInflater inflater;
+
+        private String[] imageUrls;
+
+        public ImageGridArrayAdapter(Context context, String[] imageUrls) {
+            super(context, R.layout.image_view_movies, imageUrls);
+
+            this.context = context;
+            this.imageUrls = imageUrls;
+
+            inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (null == convertView) {
+                convertView = inflater.inflate(R.layout.image_view_movies, parent, false);
+            }
+
+            Picasso
+                    .with(context)
+                    .load(imageUrls[position])
+                    .fit()
+                    .into((ImageView) convertView);
+
+            return convertView;
+        }
+    }
 
 
 
