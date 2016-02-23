@@ -13,12 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/gridView_movies"
-        android:numColumns="auto_fit"
-        android:stretchMode="none"
-        android:gravity="fill"
-        android:minHeight="1dp"
-        android:minWidth="1dp"
-        android:columnWidth="90dp"
-        android:verticalSpacing="1dp" />
+        android:numColumns="2" />
 
 </FrameLayout>
