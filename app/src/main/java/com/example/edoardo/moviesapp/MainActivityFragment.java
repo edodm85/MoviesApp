@@ -176,12 +176,10 @@ public class MainActivityFragment extends Fragment {
     {
         FetchMovieTask movieTask = new FetchMovieTask();
 
-
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_sort_order_key),
-                getString(R.string.pref_sort_order_default));
+        String sort = prefs.getString(getString(R.string.pref_sort_order_key), "");
 
-        movieTask.execute();
+        movieTask.execute(sort);
     }
 
 
@@ -285,7 +283,7 @@ public class MainActivityFragment extends Fragment {
 
 
     // Task
-    public class FetchMovieTask extends AsyncTask<Void, Void, MovieData[]>
+    public class FetchMovieTask extends AsyncTask<String, Void, MovieData[]>
     {
 
 
@@ -333,18 +331,17 @@ public class MainActivityFragment extends Fragment {
 
         }
         @Override
-        protected MovieData[] doInBackground(Void... params)
+        protected MovieData[] doInBackground(String... params)
         {
+            if(params.length == 0)
+                return null;
 
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
+
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             // Will contain the raw JSON response as a string.
             String movieJsonStr = null;
-
-            String format = "popularity.desc";
 
 
             try {
@@ -353,7 +350,7 @@ public class MainActivityFragment extends Fragment {
                 final String APPID_PARAM = "api_key";
 
                 Uri builtUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
-                        .appendQueryParameter(SORT_BY, format)
+                        .appendQueryParameter(SORT_BY, params[0])
                         .appendQueryParameter(APPID_PARAM, Key.keyMovies)
                         .build();
 

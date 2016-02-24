@@ -29,6 +29,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.edoardo.moviesapp.MainActivity" />
         </activity>
+        <activity
+            android:name=".SettingsMoviesActivity"
+            android:label="@string/title_activity_settings_movies"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.edoardo.moviesapp.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
