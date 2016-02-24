@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,6 +29,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -70,30 +76,56 @@ public class MainActivityFragment extends Fragment {
             R.drawable.sample_7
     };
 
-    // ImageListAdapter oImageAdapter;
+    ImageGridArrayAdapter oImageGridAdapter;
 
 
     public MainActivityFragment()
     {
     }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Add this line in order for this fragment to handle menu events.
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.moviesfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_refresh)
+        {
+            updateMovies();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
 
-
-
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridview = (GridView) rootView.findViewById(R.id.gridView_movies);
 
+        oImageGridAdapter = new ImageGridArrayAdapter(getContext());
 
-        FetchMovieTask movieTask = new FetchMovieTask();
-        movieTask.execute();
+        for(int i = 0; i < eatFoodyImages.length; i++)
+            oImageGridAdapter.add(eatFoodyImages[i]);
 
         // for picasso
-        //gridview.setAdapter(new ImageGridArrayAdapter(getContext(), eatFoodyImages));
-
+        gridview.setAdapter(oImageGridAdapter);
 
         //ImageGridAdapter oTest = new ImageGridAdapter(getContext());
         //gridview.setAdapter(oTest);
@@ -102,8 +134,19 @@ public class MainActivityFragment extends Fragment {
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateMovies();
+    }
 
 
+
+    private void updateMovies()
+    {
+        FetchMovieTask movieTask = new FetchMovieTask();
+        movieTask.execute();
+    }
 
 
 
@@ -160,9 +203,14 @@ public class MainActivityFragment extends Fragment {
         private Context context;
         private LayoutInflater inflater;
 
-        private String[] imageUrls;
+        private List<String> imageUrls;
 
-        public ImageGridArrayAdapter(Context context, String[] imageUrls) {
+
+        public ImageGridArrayAdapter(Context context) {
+            this(context, new ArrayList<String>());
+        }
+
+        public ImageGridArrayAdapter(Context context, List<String> imageUrls) {
             super(context, R.layout.image_view_movies, imageUrls);
 
             this.context = context;
@@ -179,7 +227,7 @@ public class MainActivityFragment extends Fragment {
 
             Picasso
                     .with(context)
-                    .load(imageUrls[position])
+                    .load(imageUrls.get(position))
                     .fit()
                     .into((ImageView) convertView);
 
@@ -190,14 +238,24 @@ public class MainActivityFragment extends Fragment {
 
 
 
+    public class MovieData
+    {
+        String pathImage;
+        String titleMovie;
+        String dateMovie;
+    };
+
+
+
     // Task
-    public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
+    public class FetchMovieTask extends AsyncTask<Void, Void, MovieData[]>
+    {
 
 
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
 
-        private String[] getMoviesDataFromJson(String moviesJsonStr)
+        private MovieData[] getMoviesDataFromJson(String moviesJsonStr)
                 throws JSONException {
 
             // These are the names of the JSON objects that need to be extracted.
@@ -211,9 +269,11 @@ public class MainActivityFragment extends Fragment {
 
 
 
-            String[] resultStrs = new String[movieArray.length()];
+            MovieData[] resultStrs = new MovieData[movieArray.length()];
             for(int i = 0; i < movieArray.length(); i++)
             {
+                resultStrs[i] = new MovieData();
+
                 // For now, using the format "Day, description, hi/low"
                 String path;
                 String title;
@@ -223,23 +283,21 @@ public class MainActivityFragment extends Fragment {
                 JSONObject moviePosition = movieArray.getJSONObject(i);
 
                 path = moviePosition.getString(OWM_PATH);
-
                 title = moviePosition.getString(OWM_TITLE);
-
                 date = moviePosition.getString(OWM_RELESEDATA);
 
-                resultStrs[i] = path + " - " + title + " - " + date;
+                resultStrs[i].pathImage = "http://image.tmdb.org/t/p/w185/" + path;
+                resultStrs[i].dateMovie = date;
+                resultStrs[i].titleMovie = title;
+
+                Log.d(LOG_TAG, resultStrs[i].pathImage + " - " + date + " - " + title);
             }
             return resultStrs;
 
         }
         @Override
-        protected String[] doInBackground(String... params) {
-
-            // If there's no zip code, there's nothing to look up.  Verify size of params.
-            /*if (params.length == 0) {
-                return null;
-            }*/
+        protected MovieData[] doInBackground(Void... params)
+        {
 
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
@@ -263,8 +321,6 @@ public class MainActivityFragment extends Fragment {
                         .build();
 
                 URL url = new URL(builtUri.toString());
-                Log.v(LOG_TAG, builtUri.toString());
-
 
                 // Create the request and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -313,7 +369,7 @@ public class MainActivityFragment extends Fragment {
 
             try {
                 return getMoviesDataFromJson(movieJsonStr);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
@@ -323,12 +379,21 @@ public class MainActivityFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String[] result) {
-            if (result != null) {
-             /*   mForecastAdapter.clear();
-                for(String dayForecastStr : result) {
-                    mForecastAdapter.add(dayForecastStr);
-                }*/
+        protected void onPostExecute(MovieData[] result)
+        {
+            if (result != null)
+            {
+                try {
+                    oImageGridAdapter.clear();
+                    for (int i = 0; i < result.length; i++)
+                    {
+                        String url = result[i].pathImage.toString();
+                        oImageGridAdapter.add(url);
+                    }
+
+                }catch (Exception e) {
+                    Log.e(LOG_TAG, e.getMessage(), e);
+                }
                 // New data is back from the server.  Hooray!
             }
         }
