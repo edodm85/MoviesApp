@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -35,7 +34,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -126,9 +124,17 @@ public class MainActivityFragment extends Fragment {
 
         oImageGridAdapter = new ImageGridArrayAdapter(getContext());
 
-        for(int i = 0; i < eatFoodyImages.length; i++)
-            oImageGridAdapter.add(eatFoodyImages[i]);
 
+        MovieData[] oTemp = new MovieData[eatFoodyImages.length];
+
+        for(int i = 0; i < eatFoodyImages.length; i++) {
+            oTemp[i] = new MovieData();
+            oTemp[i].titleMovie = "";
+            oTemp[i].dateMovie = "";
+            oTemp[i].pathImage = eatFoodyImages[i];
+
+            oImageGridAdapter.add(oTemp[i]);
+        }
         // for picasso
         gridview.setAdapter(oImageGridAdapter);
 
@@ -140,9 +146,9 @@ public class MainActivityFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
 
-                Toast.makeText(getContext(), "Ciao", Toast.LENGTH_LONG).show();
+               // Toast.makeText(getContext(), "Ciao", Toast.LENGTH_LONG).show();
 
-                String test = oImageGridAdapter.imageUrls.get(position);
+                String test = oImageGridAdapter.oListData.get(position).titleMovie;
                 Intent intent = new Intent(getActivity(), MoviesDetailActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, test);
                 startActivity(intent);
@@ -233,18 +239,19 @@ public class MainActivityFragment extends Fragment {
         private Context context;
         private LayoutInflater inflater;
 
-        private List<String> imageUrls;
+        private List<MovieData> oListData;
 
 
-        public ImageGridArrayAdapter(Context context) {
-            this(context, new ArrayList<String>());
+        public ImageGridArrayAdapter(Context context)
+        {
+            this(context, new ArrayList<MovieData>());
         }
 
-        public ImageGridArrayAdapter(Context context, List<String> imageUrls) {
-            super(context, R.layout.image_view_movies, imageUrls);
+        public ImageGridArrayAdapter(Context context, List<MovieData> data) {
+            super(context, R.layout.image_view_movies, data);
 
             this.context = context;
-            this.imageUrls = imageUrls;
+            this.oListData = data;
 
             inflater = LayoutInflater.from(context);
         }
@@ -257,7 +264,7 @@ public class MainActivityFragment extends Fragment {
 
             Picasso
                     .with(context)
-                    .load(imageUrls.get(position))
+                    .load(oListData.get(position).pathImage)
                     .fit()
                     .into((ImageView) convertView);
 
@@ -417,8 +424,7 @@ public class MainActivityFragment extends Fragment {
                     oImageGridAdapter.clear();
                     for (int i = 0; i < result.length; i++)
                     {
-                        String url = result[i].pathImage.toString();
-                        oImageGridAdapter.add(url);
+                        oImageGridAdapter.add(result[i]);
                     }
 
                 }catch (Exception e) {
