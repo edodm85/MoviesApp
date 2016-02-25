@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -33,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -124,6 +121,7 @@ public class MainActivityFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridview = (GridView) rootView.findViewById(R.id.gridView_movies);
+        final ImageView oImageView = (ImageView) rootView.findViewById(R.id.item_imageview_movies);
 
         oImageGridAdapter = new ImageGridArrayAdapter(getContext());
 
@@ -301,6 +299,8 @@ public class MainActivityFragment extends Fragment {
             final String OWM_PATH = "poster_path";
             final String OWM_TITLE = "original_title";
             final String OWM_RELESEDATA = "release_date";
+            final String OWM_VOTE = "vote_average";
+            final String OWM_OVERVIEW = "overview";
 
             JSONObject movieJson = new JSONObject(moviesJsonStr);
             JSONArray movieArray = movieJson.getJSONArray(OWM_RESULTS);
@@ -316,6 +316,8 @@ public class MainActivityFragment extends Fragment {
                 String path;
                 String title;
                 String date;
+                String rating;
+                String desc;
 
                 // Get the JSON object representing the day
                 JSONObject moviePosition = movieArray.getJSONObject(i);
@@ -323,10 +325,14 @@ public class MainActivityFragment extends Fragment {
                 path = moviePosition.getString(OWM_PATH);
                 title = moviePosition.getString(OWM_TITLE);
                 date = moviePosition.getString(OWM_RELESEDATA);
+                rating = moviePosition.getString(OWM_VOTE);
+                desc = moviePosition.getString(OWM_OVERVIEW);
 
                 resultStrs[i].pathImage = "http://image.tmdb.org/t/p/w185/" + path;
                 resultStrs[i].dateMovie = date;
                 resultStrs[i].titleMovie = title;
+                resultStrs[i].ratingMovie = rating;
+                resultStrs[i].descMovie = desc;
 
                 Log.d(LOG_TAG, resultStrs[i].pathImage + " - " + date + " - " + title);
             }

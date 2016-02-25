@@ -11,6 +11,8 @@ public class MovieData implements Parcelable
     String pathImage;
     String titleMovie;
     String dateMovie;
+    String ratingMovie;
+    String descMovie;
 
 
     public MovieData()
@@ -38,6 +40,8 @@ public class MovieData implements Parcelable
         dest.writeString(pathImage);
         dest.writeString(titleMovie);
         dest.writeString(dateMovie);
+        dest.writeString(ratingMovie);
+        dest.writeString(descMovie);
     }
 
     /**
@@ -55,6 +59,8 @@ public class MovieData implements Parcelable
         pathImage = in.readString();
         titleMovie = in.readString();
         dateMovie = in.readString();
+        ratingMovie = in.readString();
+        descMovie = in.readString();
     }
 
 
