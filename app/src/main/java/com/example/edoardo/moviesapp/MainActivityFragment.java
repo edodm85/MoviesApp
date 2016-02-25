@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -31,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -148,10 +151,17 @@ public class MainActivityFragment extends Fragment {
 
                // Toast.makeText(getContext(), "Ciao", Toast.LENGTH_LONG).show();
 
-                String test = oImageGridAdapter.oListData.get(position).titleMovie;
+                //String test = oImageGridAdapter.oListData.get(position).titleMovie;
+                MovieData test = oImageGridAdapter.oListData.get(position);
                 Intent intent = new Intent(getActivity(), MoviesDetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT, test);
-                startActivity(intent);
+                        .putExtra("com.package.MovieData", test);
+                try {
+                    startActivity(intent);
+                }catch (Exception ex)
+                {
+                    Log.e("ciao", ex.getMessage());
+                }
+
             }
         });
 
@@ -272,13 +282,6 @@ public class MainActivityFragment extends Fragment {
 
 
 
-
-    public class MovieData
-    {
-        String pathImage;
-        String titleMovie;
-        String dateMovie;
-    };
 
 
 
@@ -438,3 +441,6 @@ public class MainActivityFragment extends Fragment {
 
 
 }
+
+
+
