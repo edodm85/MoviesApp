@@ -301,6 +301,7 @@ public class MainActivityFragment extends Fragment {
             final String OWM_RELESEDATA = "release_date";
             final String OWM_VOTE = "vote_average";
             final String OWM_OVERVIEW = "overview";
+            final String OWM_ID = "id";
 
             JSONObject movieJson = new JSONObject(moviesJsonStr);
             JSONArray movieArray = movieJson.getJSONArray(OWM_RESULTS);
@@ -318,6 +319,7 @@ public class MainActivityFragment extends Fragment {
                 String date;
                 String rating;
                 String desc;
+                String id;
 
                 // Get the JSON object representing the day
                 JSONObject moviePosition = movieArray.getJSONObject(i);
@@ -327,12 +329,14 @@ public class MainActivityFragment extends Fragment {
                 date = moviePosition.getString(OWM_RELESEDATA);
                 rating = moviePosition.getString(OWM_VOTE);
                 desc = moviePosition.getString(OWM_OVERVIEW);
+                id = moviePosition.getString(OWM_ID);
 
                 resultStrs[i].pathImage = "http://image.tmdb.org/t/p/w185/" + path;
                 resultStrs[i].dateMovie = date;
                 resultStrs[i].titleMovie = title;
                 resultStrs[i].ratingMovie = rating;
                 resultStrs[i].descMovie = desc;
+                resultStrs[i].idMovie = id;
 
                 Log.d(LOG_TAG, resultStrs[i].pathImage + " - " + date + " - " + title);
             }
