@@ -16,18 +16,20 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Title"
             android:id="@+id/textViewTitle"
-            android:layout_gravity="center_horizontal"
-            android:padding="20dp" />
+            android:padding="20dp"
+            android:gravity="center"
+            android:background="@color/accent_material_dark" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp">
 
 
             <LinearLayout
@@ -43,7 +45,8 @@
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp">
 
                     <LinearLayout
                         android:orientation="horizontal"
@@ -68,29 +71,6 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Runtime:"
-                            android:id="@+id/textView2"
-                            android:paddingTop="10dp"
-                            android:singleLine="true" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Durata"
-                            android:id="@+id/textViewDurata"
-                            android:layout_gravity="center_horizontal"
-                            android:paddingTop="10dp"
-                            android:paddingLeft="5dp" />
-
-                    </LinearLayout>
 
                     <LinearLayout
                         android:orientation="horizontal"

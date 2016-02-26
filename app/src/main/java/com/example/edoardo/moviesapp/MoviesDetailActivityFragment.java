@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -32,6 +35,7 @@ public class MoviesDetailActivityFragment extends Fragment
         TextView textViewData = (TextView) root.findViewById(R.id.textViewDate);
         TextView textViewVote = (TextView) root.findViewById(R.id.textViewRating);
         TextView textViewDesc = (TextView) root.findViewById(R.id.textViewDescription);
+        ImageView imageViewT = (ImageView) root.findViewById(R.id.imageViewThumbnail);
 
 
 
@@ -40,18 +44,22 @@ public class MoviesDetailActivityFragment extends Fragment
 
         moviesData = (MovieData)intent.getParcelableExtra("com.package.MovieData");
 
+        String rating = moviesData.ratingMovie  + "/10";
+
         textViewTitle.setText(moviesData.titleMovie);
         textViewData.setText(moviesData.dateMovie);
-        textViewVote.setText(moviesData.ratingMovie);
+        textViewVote.setText(rating);
         textViewDesc.setText(moviesData.descMovie);
 
+        String pathImage = moviesData.pathImage;
 
-        /*if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT))
-        {
-            moviesStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-            ((TextView) root.findViewById(R.id.textViewTitle))
-                    .setText(moviesStr);
-        }*/
+
+
+        Picasso.with(getContext())
+                .load(pathImage)
+                .fit()
+                .into(imageViewT);
+
 
         return root;
     }

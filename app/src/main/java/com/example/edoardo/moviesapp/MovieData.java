@@ -196,6 +196,7 @@ http://api.themoviedb.org/3/movie/293660?api_key=[KEY]
     }
 
 
+    http://api.themoviedb.org/3/movie/293660?api_key=[KEY]
     http://api.themoviedb.org/3/movie/293660/videos?api_key=[KEY]
 
     {
